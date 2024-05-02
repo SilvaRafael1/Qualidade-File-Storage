@@ -9,6 +9,12 @@ const folderSchema = new mongoose.Schema({
       ref: "Folder",
     },
   ],
+  pai: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

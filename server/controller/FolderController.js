@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const File = require("../models/FileSchema")
 const Folder = require("../models/FolderSchema")
 
 module.exports = {
@@ -14,17 +12,22 @@ module.exports = {
 
   async create(req, res) {
     try {
-      const { name, parentId } = req.body;
+      const { name, parentId, paiId } = req.body;
 
       const newFolder = new Folder({
         name,
         parent: [],
+        pai: []
       });
 
       if (parentId) {
         const parentFolder = await Folder.findById(parentId);
         parentFolder.parent.push(newFolder._id);
         await parentFolder.save();
+      }
+      
+      if (paiId) {
+        newFolder.pai.push(paiId);
       }
 
       await newFolder.save();
