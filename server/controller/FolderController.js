@@ -3,8 +3,8 @@ const Folder = require("../models/FolderSchema")
 module.exports = {
   async index(req, res) {
     try {
-      const folders = await Folder.find();
-      res.status(200).json(folders);
+      const mainFolder = await Folder.find({ name: "main" }).populate("files");
+      res.status(200).json(mainFolder[0].files);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

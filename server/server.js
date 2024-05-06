@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const router = require("./routes");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,9 @@ mongoose.connection.on("error", function (err) {
 db.once("open", function () {
   console.log("Estamos conectados no banco de dados!");
 });
+
+// Security
+app.use(cors());
 
 // JSON
 app.use(express.json());

@@ -16,7 +16,7 @@ module.exports = {
       for (const file of req.files) {
         const newFile = new File({
           name: file.originalname,
-          path: `/files/${file.filename}`,
+          path: `http://localhost:3000/files/${file.filename}`,
         });
 
         await newFile.save();
