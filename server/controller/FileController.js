@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
+const path = require("path");
+const IconURL = require("../service/IconsService")
 
 module.exports = {
   async upload(req, res) {
@@ -16,6 +18,7 @@ module.exports = {
       for (const file of req.files) {
         const newFile = new File({
           name: file.originalname,
+          icon: IconURL(file.originalname),
           path: `http://localhost:3000/files/${file.filename}`,
         });
 

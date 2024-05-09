@@ -27,10 +27,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/files", express.static(path.join(__dirname, "uploads")));
-
 // Router
 app.use("/api", router);
+app.use("/files", express.static(path.join(__dirname, "uploads")));
+app.use("/icons", express.static(path.join(__dirname, "icons")));
 
 // Start the server
 app.listen(PORT, () => {

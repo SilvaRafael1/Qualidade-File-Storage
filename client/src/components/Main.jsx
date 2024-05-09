@@ -23,15 +23,18 @@ const Main = () => {
     listFiles()
  }, [])
 
+ console.log(files)
+
   return (
     <ThemeProvider theme={DefaultTheme}>
         {
             files.map(file => (
-                <p key={file._id} className='m-5'>
-                    <a href={file.path} target='_blank'>
-                        {file.name}
+                <div key={file._id}>
+                    <a href={file.path} target='_blank' className='flex m-5 items-center'>
+                      <img src={file.icon} className='h-6 w-6'/>
+                      {file.name}
                     </a>
-                </p>
+                </div>
             ))
         }
     </ThemeProvider>
