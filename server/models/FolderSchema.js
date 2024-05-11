@@ -15,6 +15,10 @@ const folderSchema = new mongoose.Schema({
       ref: "Folder",
     },
   ],
+  icon: {
+    type: String,
+    default: "http://localhost:3000/icons/folder.png"
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

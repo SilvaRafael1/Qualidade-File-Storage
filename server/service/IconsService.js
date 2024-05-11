@@ -15,7 +15,13 @@ function IconURL(filename) {
         case ".gif":
             IconURL += "/image.png";
             break;
-            
+
+        case ".doc":
+        case ".docx":
+        case ".odt":
+            IconURL += "/text.png";
+            break;
+        
         default:
             IconURL += "/file.png";
     }
