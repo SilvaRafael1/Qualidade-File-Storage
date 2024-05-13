@@ -3,6 +3,7 @@ import client from "../api/Api";
 import DefaultTheme from "../theme/DefaultTheme";
 import { ThemeProvider, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
+import ActionButton from "./ActionButton";
 
 const Folder = () => {
   const [files, setFiles] = useState([]);
@@ -51,10 +52,13 @@ const Folder = () => {
         <div className="w-screen flex items-center justify-center flex-col">
           <div className="mt-6 bg-[#fff] w-full max-w-[1280px]">
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-medium">
-                {title}
+              <div className="text-2xl font-medium">{title}</div>
+              <div className="flex flex-row gap-2">
+                <ActionButton />
+                <Button variant="contained" href={paiId}>
+                  Voltar
+                </Button>
               </div>
-              <Button variant="contained" href={paiId}>Voltar</Button>
             </div>
             <div className="shadow-xl border border-solid p-5 mt-4">
               Pasta está vazia
@@ -68,30 +72,41 @@ const Folder = () => {
   return (
     <ThemeProvider theme={DefaultTheme}>
       <div className="w-screen flex items-center justify-center">
-        <div className="mt-6 bg-[#fff] w-full max-w-[1280px] shadow-xl">
-          {folders.map((folder) => (
-            <div key={folder._id}>
-              <a
-                href={folder._id}
-                className="flex items-center border border-solid hover:bg-[#eee] p-5"
-              >
-                <img src={folder.icon} className="h-6 w-6 mr-3" />
-                {folder.name}
-              </a>
+        <div className="mt-6 bg-[#fff] w-full max-w-[1280px]">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-medium">{title}</div>
+            <div className="flex flex-row gap-2">
+              <ActionButton />
+              <Button variant="contained" href={paiId}>
+                Voltar
+              </Button>
             </div>
-          ))}
-          {files.map((file) => (
-            <div key={file._id}>
-              <a
-                href={file.path}
-                target="_blank"
-                className="flex items-center border border-solid hover:bg-[#eee] p-5"
-              >
-                <img src={file.icon} className="h-6 w-6 mr-2" />
-                {file.name}
-              </a>
-            </div>
-          ))}
+          </div>
+          <div className="shadow-xl mt-4">
+            {folders.map((folder) => (
+              <div key={folder._id}>
+                <a
+                  href={folder._id}
+                  className="flex items-center border border-solid hover:bg-[#eee] p-5"
+                >
+                  <img src={folder.icon} className="h-6 w-6 mr-3" />
+                  {folder.name}
+                </a>
+              </div>
+            ))}
+            {files.map((file) => (
+              <div key={file._id}>
+                <a
+                  href={file.path}
+                  target="_blank"
+                  className="flex items-center border border-solid hover:bg-[#eee] p-5"
+                >
+                  <img src={file.icon} className="h-6 w-6 mr-2" />
+                  {file.name}
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </ThemeProvider>
