@@ -4,6 +4,7 @@ module.exports = {
   async index(req, res) {
     try {
       const mainFolder = await Folder.find({ name: "Pasta Principal" }).populate("files").populate("parent");
+
       res.status(200).json(mainFolder[0]);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -29,9 +30,8 @@ module.exports = {
       if (paiId) {
         newFolder.pai.push(paiId);
       }
-
       await newFolder.save();
-
+      
       res.status(201).json(newFolder);
     } catch (error) {
       res.status(500).json({ error: error.message });

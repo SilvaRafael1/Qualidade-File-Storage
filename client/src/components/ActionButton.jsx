@@ -1,22 +1,26 @@
 import { useState } from "react";
 import client from "../api/Api";
-import { useParams } from "react-router-dom"
-import { 
-  Button, 
-  Menu, 
-  MenuItem, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
+import { useParams } from "react-router-dom";
+import {
+  Button,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
   TextField,
-  Alert
+  Alert,
 } from "@mui/material";
 
 const ActionButton = () => {
-  const { id } = useParams()
-
+  const { id } = useParams();
+  let folderId = id
+  if(!id) {
+    folderId = "6638e6a7719cc0f8b9251c14"
+  }
+  
   // Menu
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const openMenu = Boolean(menuAnchorEl);
@@ -30,17 +34,17 @@ const ActionButton = () => {
   // Dialog Adição de Arquivos
   const [openDialogFiles, setOpenDialogFiles] = useState(false);
   const handleDialogFilesClick = () => {
-    handleMenuClose()
+    handleMenuClose();
     setOpenDialogFiles(true);
   };
   const handleDialogFilesClose = () => {
     setOpenDialogFiles(false);
   };
-  
+
   // Dialog Adição de Pastas
   const [openDialogFolders, setOpenDialogFolders] = useState(false);
   const handleDialogFoldersClick = () => {
-    handleMenuClose()
+    handleMenuClose();
     setOpenDialogFolders(true);
   };
   const handleDialogFoldersClose = () => {
@@ -48,11 +52,12 @@ const ActionButton = () => {
   };
 
   // Submit Folder
-  const handleSubmitFolder = (data) => client.post("/folder", data).then(() => {
-    <Alert severity="success">Pasta criada com sucesso.</Alert>
-    handleDialogFoldersClose();
-    location.reload()
-  })
+  const handleSubmitFolder = (data) =>
+    client.post("/folder", data).then(() => {
+      <Alert severity="success">Pasta criada com sucesso.</Alert>;
+      handleDialogFoldersClose();
+      location.reload();
+    });
 
   return (
     <div>
@@ -80,45 +85,29 @@ const ActionButton = () => {
       </Menu>
 
       {/* Dialogo para adição de arquivos */}
-      <Dialog
-        open={openDialogFiles}
-        onClose={handleDialogFilesClose}
-        PaperProps={{
-          component: "form",
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleDialogFilesClose();
-          },
-        }}
-      >
-        <DialogTitle>Arquivo</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogFilesClose}>Cancel</Button>
-          <Button type="submit" variant="contained">Subscribe</Button>
-        </DialogActions>
+      <Dialog open={openDialogFiles} onClose={handleDialogFilesClose}>
+        <form
+          method="post"
+          action="http://localhost:3000/api/upload"
+          encType="multipart/form-data"
+        >
+          <DialogTitle>Arquivo</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Selecione os arquivos que deseja adicionar na pasta.
+            </DialogContentText>
+            <input type="file" name="files" id="files" multiple />
+            <input type="hidden" name="folderId" id="folderId" value={folderId} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogFilesClose}>Cancelar</Button>
+            <Button type="submit" variant="contained">
+              Enviar
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
-      
+
       {/* Dialogo para adição de pastas */}
       <Dialog
         open={openDialogFolders}
@@ -129,8 +118,8 @@ const ActionButton = () => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            formJson.paiId = id;
-            formJson.parentId = id;
+            formJson.paiId = folderId;
+            formJson.parentId = folderId;
             handleSubmitFolder(formJson);
           },
         }}
@@ -154,7 +143,9 @@ const ActionButton = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogFoldersClose}>Cancelar</Button>
-          <Button type="submit" variant="contained">Adicionar</Button>
+          <Button type="submit" variant="contained">
+            Adicionar
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

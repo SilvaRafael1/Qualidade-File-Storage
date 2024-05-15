@@ -1,7 +1,5 @@
-const mongoose = require("mongoose");
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
-const path = require("path");
 const IconURL = require("../service/IconsService")
 
 module.exports = {
@@ -16,8 +14,9 @@ module.exports = {
       const savedFiles = [];
 
       for (const file of req.files) {
+        const originalFilename = Buffer.from(file.originalname, "latin1").toString("utf-8");
         const newFile = new File({
-          name: file.originalname,
+          name: originalFilename,
           icon: IconURL(file.originalname),
           path: `http://localhost:3000/files/${file.filename}`,
         });
@@ -32,7 +31,7 @@ module.exports = {
         }
       }
 
-      res.status(201).json(savedFiles);
+      res.redirect(`http://localhost:5173/${folderId}`)
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
