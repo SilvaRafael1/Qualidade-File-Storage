@@ -1,8 +1,18 @@
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
-const IconURL = require("../service/IconsService")
+const IconURL = require("../service/IconsService");
 
 module.exports = {
+  async byId(req, res) {
+    try {
+      const { id } = req.params;
+      const file = await File.findById(id);
+      res.status(200).json(file);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
   async upload(req, res) {
     try {
       const { folderId } = req.body;
@@ -36,4 +46,18 @@ module.exports = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  async updateIcons(req, res) {
+    try {
+      const files = await File.find();
+      for (const file of files) {
+        await File.updateOne(file, {
+          icon: IconURL(file.name)
+        })
+      }
+      res.json("feito xd")
+    } catch (error) {
+      console.error(error)
+    }
+  }
 };

@@ -20,8 +20,19 @@ const upload = multer({
 // Controllers
 const FileController = require("./controller/FileController");
 const FolderController = require("./controller/FolderController")
+const DeleteController = require("./controller/DeleteController")
+const RenameController = require("./controller/RenameController")
+const SearchController = require("./controller/SearchController")
 
+router.get("/file/:id", FileController.byId);
 router.post("/upload", upload, FileController.upload);
+router.get("/updateIcons", FileController.updateIcons);
+
+router.delete("/delete/:id", DeleteController.delete);
+
+router.put("/rename", RenameController.rename);
+
+router.get("/search/:search", SearchController.search);
 
 router.get("/folder", FolderController.index);
 router.get("/folder/:id", FolderController.filesFolder);
