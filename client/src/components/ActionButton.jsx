@@ -13,12 +13,13 @@ import {
   TextField,
   Alert,
 } from "@mui/material";
+import { CreateNewFolderOutlined, NoteAddOutlined } from "@mui/icons-material";
 
 const ActionButton = () => {
   const { id } = useParams();
   let folderId = id
   if(!id) {
-    folderId = "6638e6a7719cc0f8b9251c14"
+    folderId = "66bb480a577f3ec36762ea14"
   }
   
   // Menu
@@ -80,8 +81,14 @@ const ActionButton = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleDialogFilesClick}>Adicionar Arquivos</MenuItem>
-        <MenuItem onClick={handleDialogFoldersClick}>Nova Pasta</MenuItem>
+        <MenuItem onClick={handleDialogFilesClick}>
+          <NoteAddOutlined fontSize="small" className="mr-1" />
+          Adicionar Arquivos
+        </MenuItem>
+        <MenuItem onClick={handleDialogFoldersClick}>
+          <CreateNewFolderOutlined fontSize="small" className="mr-1" />
+          Nova Pasta
+        </MenuItem>
       </Menu>
 
       {/* Dialogo para adição de arquivos */}

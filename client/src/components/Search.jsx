@@ -2,40 +2,24 @@ import { useEffect, useState } from "react";
 import client from "../api/Api";
 import DefaultTheme from "../theme/DefaultTheme";
 import { ThemeProvider, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
-import ActionButton from "./ActionButton";
+import { useParams, NavLink } from "react-router-dom";
 import ActionTooltip from "./ActionTooltip";
 import SearchInput from "./SearchInput";
 
-const Folder = () => {
+const Search = () => {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
-  const [paiId, setPaiId] = useState("/");
-  const [title, setTitle] = useState("");
 
-  const { id } = useParams();
+  const { search } = useParams();
 
-  const listFiles = async () => {
+  const listSearch = async () => {
     try {
-      const res = await client.get(`/folder/${id}`);
+      const res = await client.get(`/search/${search}`);
       if (res.data) {
-        setTitle(res.data.name);
-        setPaiId(`/${res.data.pai}`);
         setFiles(res.data.files);
+        setFolders(res.data.folders);
       } else {
         setFiles([]);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const listFolders = async () => {
-    try {
-      const res = await client.get(`/folder/${id}`);
-      if (res.data) {
-        setFolders(res.data.parent);
-      } else {
         setFolders([]);
       }
     } catch (error) {
@@ -44,8 +28,7 @@ const Folder = () => {
   };
 
   useEffect(() => {
-    listFiles();
-    listFolders();
+    listSearch();
   }, []);
 
   if (folders.length == 0 && files.length == 0) {
@@ -54,17 +37,18 @@ const Folder = () => {
         <div className="w-screen flex items-center justify-center flex-col">
           <div className="mt-6 bg-[#fff] w-full max-w-[1280px]">
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-medium">{title}</div>
+              <div className="text-2xl font-medium">Procura: {search}</div>
               <div className="flex flex-row gap-2 justify-center">
                 <SearchInput />
-                <ActionButton />
-                <Button variant="contained" href={paiId}>
-                  Voltar
-                </Button>
+                <NavLink to={"/"}>
+                  <Button variant="contained">
+                    Voltar
+                  </Button>
+                </NavLink>
               </div>
             </div>
             <div className="shadow-xl border border-solid p-5 mt-4">
-              Pasta está vazia
+              Não foi possível encontrar nenhum arquivo!
             </div>
           </div>
         </div>
@@ -77,20 +61,21 @@ const Folder = () => {
       <div className="w-full flex items-center justify-center">
         <div className="my-6 bg-[#fff] w-full max-w-[1280px]">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-medium">{title}</div>
+            <div className="text-2xl font-medium">Procura: {search}</div>
             <div className="flex flex-row gap-2 justify-center">
               <SearchInput />
-              <ActionButton />
-              <Button variant="contained" href={paiId}>
-                Voltar
-              </Button>
+              <NavLink to={"/"}>
+                <Button variant="contained">
+                  Voltar
+                </Button>
+              </NavLink>
             </div>
           </div>
           <div className="shadow-xl mt-4">
             {folders.map((folder) => (
               <div key={folder._id}>
-                <a
-                  href={folder._id}
+                <NavLink
+                  to={`../${folder._id}`}
                   className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
                   <div className="flex">
@@ -98,7 +83,7 @@ const Folder = () => {
                     {folder.name}
                   </div>
                   <ActionTooltip id={folder._id} name={folder.name} />
-                </a>
+                </NavLink>
               </div>
             ))}
             {files.map((file) => (
@@ -123,4 +108,4 @@ const Folder = () => {
   );
 };
 
-export default Folder;
+export default Search;

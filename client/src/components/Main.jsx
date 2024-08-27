@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import client from "../api/Api";
 import DefaultTheme from "../theme/DefaultTheme";
 import { ThemeProvider } from "@mui/material/styles";
 import ActionButton from "./ActionButton";
+import ActionTooltip from "./ActionTooltip";
+import SearchInput from "./SearchInput";
 
 const Main = () => {
   const [files, setFiles] = useState([]);
@@ -41,11 +43,12 @@ const Main = () => {
 
   return (
     <ThemeProvider theme={DefaultTheme}>
-      <div className="w-screen flex items-center justify-center">
-        <div className="mt-6 bg-[#fff] w-full max-w-[1280px] ">
+      <div className="w-full flex items-center justify-center">
+        <div className="my-6 bg-[#fff] w-full max-w-[1280px] ">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-medium">Pasta Principal</div>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 justify-center">
+              <SearchInput />
               <ActionButton />
             </div>
           </div>
@@ -54,10 +57,13 @@ const Main = () => {
               <div key={folder._id}>
                 <a
                   href={folder._id}
-                  className="flex items-center border border-solid hover:bg-[#eee] p-5"
+                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
-                  <img src={folder.icon} className="h-6 w-6 mr-2" />
-                  {folder.name}
+                  <div className="flex">
+                    <img src={folder.icon} className="h-6 w-6 mr-2" />
+                    {folder.name}
+                  </div>
+                  <ActionTooltip id={folder._id} name={folder.name} />
                 </a>
               </div>
             ))}
@@ -66,10 +72,13 @@ const Main = () => {
                 <a
                   href={file.path}
                   target="_blank"
-                  className="flex items-center border border-solid hover:bg-[#eee] p-5"
+                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
-                  <img src={file.icon} className="h-6 w-6 mr-2" />
-                  {file.name}
+                  <div className="flex">
+                    <img src={file.icon} className="h-6 w-6 mr-2" />
+                    {file.name}
+                  </div>
+                  <ActionTooltip id={file._id} name={file.name} />
                 </a>
               </div>
             ))}
