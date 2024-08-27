@@ -22,6 +22,14 @@ function IconURL(filename) {
             IconURL += "/text.png";
             break;
         
+        case ".csv":
+        case ".xlsx":
+        case ".xls":
+        case ".rtf":
+        case ".ods":
+            IconURL += "/planilha.png";
+            break;
+
         default:
             IconURL += "/file.png";
     }
