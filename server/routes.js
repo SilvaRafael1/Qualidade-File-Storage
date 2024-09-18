@@ -23,6 +23,7 @@ const FolderController = require("./controller/FolderController")
 const DeleteController = require("./controller/DeleteController")
 const RenameController = require("./controller/RenameController")
 const SearchController = require("./controller/SearchController")
+const AuthController = require("./controller/AuthController")
 
 router.get("/file/:id", FileController.byId);
 router.post("/upload", upload, FileController.upload);
@@ -37,5 +38,8 @@ router.get("/search/:search", SearchController.search);
 router.get("/folder", FolderController.index);
 router.get("/folder/:id", FolderController.filesFolder);
 router.post("/folder", FolderController.create);
+
+router.post("/auth/login", AuthController.auth)
+router.post("/auth/register", AuthController.register)
 
 module.exports = router;

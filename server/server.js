@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const path = require("path");
 const router = require("./routes");
 const cors = require("cors");
+const http = require("node:http")
+const https = require("node:https")
+const fs = require("node:fs")
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Connect to Local MongoDB
-const uri = "mongodb://localhost:27017";
+const uri = "mongodb://mongo:27017";
 mongoose.connect(uri, {
   dbName: "filestorage",
 });
@@ -27,12 +29,37 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// SSL
+const certs = {
+  key: fs.readFileSync("./cert/wildcard.tacchini.com.br2024.key"),
+  cert: fs.readFileSync("./cert/wildcard.tacchini.com.br.crt"),
+}
+
 // Router
 app.use("/api", router);
+
+// Public Files
 app.use("/files", express.static(path.join(__dirname, "uploads")));
 app.use("/icons", express.static(path.join(__dirname, "icons")));
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/api`);
+app.use((req, res, next) => {
+  if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
+      next();
+  } else {
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
+      res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  }
 });
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Start the server
+http.createServer((req, res) => {
+  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+  res.end();
+}).listen(80);
+https.createServer(certs, app).listen(443, () => {
+  console.log(`Servidor HTTPS rodando na porta 443`)
+})

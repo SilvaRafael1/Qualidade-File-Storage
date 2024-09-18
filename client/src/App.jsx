@@ -1,36 +1,33 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AppBar, Toolbar, Typography } from "@mui/material";
-import { ThemeProvider } from "@mui/material";
-import DefaultTheme from "./theme/DefaultTheme";
+import { AuthProvider } from "./context/AuthContext";
 
 // Components
 import Main from "./components/Main";
 import Folder from "./components/Folder";
 import Search from "./components/Search"
-import Pdf from "./components/Pdf";
+import File from "./components/File";
+import Login from "./components/Login"
+import Dashboard from "./components/Dashboard";
+import NavBar from "./components/NavBar";
 
 const App = () => {
   return (
     <BrowserRouter>
       <div>
-        <ThemeProvider theme={DefaultTheme}>
-          <AppBar color="primary" position="static">
-            <Toolbar>
-              <Typography variant="h4" color="inherit">
-                Documentos Institucionais
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </ThemeProvider>
+        <AuthProvider>
+          <NavBar />
 
-        <div>
-          <Routes>
-            <Route exact path="/" Component={Main} />
-            <Route path="/:id" Component={Folder} />
-            <Route path="/search/:search" Component={Search} />
-            <Route path="/pdf/:id" Component={Pdf} />
-          </Routes>
-        </div>
+          <div>
+            <Routes>
+              <Route exact path="/" Component={Main} />
+              <Route path="/:id" Component={Folder} />
+              <Route path="/search/:search" Component={Search} />
+              <Route path="/file/:id" Component={File} />
+              <Route path="/login" Component={Login} />
+              <Route path="/dashboard" Component={Dashboard} />
+            </Routes>
+          </div>
+        </AuthProvider>
       </div>
     </BrowserRouter>
   )
