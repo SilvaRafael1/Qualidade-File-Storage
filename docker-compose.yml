@@ -1,0 +1,31 @@
+services:
+  nodeapp:
+    build: .
+    container_name: app
+    ports:
+      - "443:443"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/
+      - SECRET_KEY=docIntTacchini2024
+      - APP_URL=localhost
+    networks:
+      - docInst
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - docInst
+    volumes:
+      - ./data/db:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+
+networks:
+  docInst:
+    driver: bridge
