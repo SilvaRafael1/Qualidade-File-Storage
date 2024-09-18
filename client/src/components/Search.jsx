@@ -9,6 +9,7 @@ import SearchInput from "./SearchInput";
 const Search = () => {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
+  const token = localStorage.getItem("token")
 
   const { search } = useParams();
 
@@ -82,14 +83,14 @@ const Search = () => {
                     <img src={folder.icon} className="h-6 w-6 mr-3" />
                     {folder.name}
                   </div>
-                  <ActionTooltip id={folder._id} name={folder.name} />
+                  {token ? <ActionTooltip id={folder._id} name={folder.name} /> : ""}
                 </NavLink>
               </div>
             ))}
             {files.map((file) => (
               <div key={file._id}>
                 <a
-                  href={file.path}
+                  href={`/file/${file._id}`}
                   target="_blank"
                   className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
@@ -97,7 +98,7 @@ const Search = () => {
                     <img src={file.icon} className="h-6 w-6 mr-2" />
                     {file.name}
                   </div>
-                  <ActionTooltip id={file._id} name={file.name} />
+                  {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
                 </a>
               </div>
             ))}

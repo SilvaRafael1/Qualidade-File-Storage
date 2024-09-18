@@ -12,6 +12,7 @@ const Folder = () => {
   const [folders, setFolders] = useState([]);
   const [paiId, setPaiId] = useState("/");
   const [title, setTitle] = useState("");
+  const token = localStorage.getItem("token")
 
   const { id } = useParams();
 
@@ -57,7 +58,7 @@ const Folder = () => {
               <div className="text-2xl font-medium">{title}</div>
               <div className="flex flex-row gap-2 justify-center">
                 <SearchInput />
-                <ActionButton />
+                {token ? <ActionButton /> : ""}
                 <Button variant="contained" href={paiId}>
                   Voltar
                 </Button>
@@ -80,7 +81,7 @@ const Folder = () => {
             <div className="text-2xl font-medium">{title}</div>
             <div className="flex flex-row gap-2 justify-center">
               <SearchInput />
-              <ActionButton />
+              {token ? <ActionButton /> : ""}
               <Button variant="contained" href={paiId}>
                 Voltar
               </Button>
@@ -97,22 +98,21 @@ const Folder = () => {
                     <img src={folder.icon} className="h-6 w-6 mr-3" />
                     {folder.name}
                   </div>
-                  <ActionTooltip id={folder._id} name={folder.name} />
+                  {token ? <ActionTooltip id={folder._id} name={folder.name} /> : ""}
                 </a>
               </div>
             ))}
             {files.map((file) => (
               <div key={file._id}>
                 <a
-                  href={file.path}
-                  target="_blank"
+                  href={`/file/${file._id}`}
                   className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
                   <div className="flex">
                     <img src={file.icon} className="h-6 w-6 mr-2" />
                     {file.name}
                   </div>
-                  <ActionTooltip id={file._id} name={file.name} />
+                  {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
                 </a>
               </div>
             ))}

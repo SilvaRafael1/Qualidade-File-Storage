@@ -9,6 +9,7 @@ import SearchInput from "./SearchInput";
 const Main = () => {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
+  const token = localStorage.getItem("token")
 
   const listFiles = async () => {
     try {
@@ -49,7 +50,7 @@ const Main = () => {
             <div className="text-2xl font-medium">Pasta Principal</div>
             <div className="flex flex-row gap-2 justify-center">
               <SearchInput />
-              <ActionButton />
+              {token ? <ActionButton /> : ""}
             </div>
           </div>
           <div className="shadow-xl mt-4">
@@ -63,26 +64,27 @@ const Main = () => {
                     <img src={folder.icon} className="h-6 w-6 mr-2" />
                     {folder.name}
                   </div>
-                  <ActionTooltip id={folder._id} name={folder.name} />
+                  {token ? <ActionTooltip id={folder._id} name={folder.name} /> : ""}
                 </a>
               </div>
             ))}
             {files.map((file) => (
               <div key={file._id}>
                 <a
-                  href={file.path}
-                  target="_blank"
+                  href={`/file/${file._id}`}
                   className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
                 >
                   <div className="flex">
                     <img src={file.icon} className="h-6 w-6 mr-2" />
                     {file.name}
                   </div>
-                  <ActionTooltip id={file._id} name={file.name} />
+                  {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
                 </a>
               </div>
             ))}
           </div>
+
+          <grid></grid>
         </div>
       </div>
     </ThemeProvider>
