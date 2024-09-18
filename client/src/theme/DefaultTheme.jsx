@@ -7,7 +7,7 @@ const DefaultTheme = createTheme({
             main: "#212b4a"
         },
         secondary: {
-            main: "#459e00"
+            main: "#e7dad3"
         },
         red: {
             main: red[500]

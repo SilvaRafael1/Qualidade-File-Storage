@@ -95,7 +95,8 @@ const ActionButton = () => {
       <Dialog open={openDialogFiles} onClose={handleDialogFilesClose}>
         <form
           method="post"
-          action="http://localhost:3000/api/upload"
+          action="https://localhost/api/upload"
+          // action="https://100.0.1.50/api/upload"
           encType="multipart/form-data"
         >
           <DialogTitle>Arquivo</DialogTitle>
