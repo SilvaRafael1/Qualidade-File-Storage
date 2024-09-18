@@ -1,7 +1,9 @@
 const path = require("path")
+require("dotenv/config")
 
 function IconURL(filename) {
-    let IconURL = "http://localhost:3000/icons";
+    const URL = process.env.APP_URL
+    let IconURL = `https://${URL}/icons`;
     let extension = path.extname(filename);
 
     switch (extension) {

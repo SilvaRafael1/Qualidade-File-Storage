@@ -4,6 +4,11 @@ const fileSchema = new mongoose.Schema({
   name: String,
   icon: String,
   path: String,
+  ext: String,
+  pai: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Folder",
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

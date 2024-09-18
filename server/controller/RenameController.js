@@ -1,7 +1,7 @@
 const fs = require("fs")
-const path = require("path")
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
+require("dotenv/config")
 
 module.exports = {
   async rename(req, res) {
@@ -9,13 +9,14 @@ module.exports = {
       const { id, newName, oldName } = req.body
       const file = await File.findById(id)
       const folder = await Folder.findById(id)
+      const URL = process.env.APP_URL
 
       if (file) {
-        const extension = path.extname(oldName)        
-        const newNameExt = `${newName}${extension}`
-        const fullOldName = file.path.replace("http://localhost:3000/files/", "")
+        const extension = file.ext        
+        const newNameExt = `${newName}.${extension}`
+        const fullOldName = file.path.replace(`https://${URL}/files/`, "")
         const newPath = file.path.replace(oldName, newNameExt)
-        const fullNewName = newPath.replace("http://localhost:3000/files/", "")
+        const fullNewName = newPath.replace(`https://${URL}/files/`, "")
 
         fs.rename(`../server/uploads/${fullOldName}`, `../server/uploads/${fullNewName}`, (err) => {
           if (err) {
@@ -29,6 +30,14 @@ module.exports = {
         })
 
         return res.json(updatedFile)
+      }
+
+      if (folder) {
+        const updatedFolder = await Folder.updateOne(folder, {
+          name: newName
+        })
+
+        return res.json(updatedFolder)
       }
     } catch (error) {
       console.error(error)

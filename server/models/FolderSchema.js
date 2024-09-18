@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+require("dotenv/config")
+
+const URL = process.env.APP_URL
 
 const folderSchema = new mongoose.Schema({
   name: String,
@@ -17,7 +20,7 @@ const folderSchema = new mongoose.Schema({
   ],
   icon: {
     type: String,
-    default: "http://localhost:3000/icons/folder.png"
+    default: `https://${URL}/icons/folder.png`
   },
   createdAt: { type: Date, default: Date.now },
 });
