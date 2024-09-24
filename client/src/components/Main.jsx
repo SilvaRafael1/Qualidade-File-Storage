@@ -45,7 +45,7 @@ const Main = () => {
   return (
     <ThemeProvider theme={DefaultTheme}>
       <div className="w-full flex items-center justify-center">
-        <div className="my-6 bg-[#fff] w-full max-w-[1280px] ">
+        <div className="my-6 bg-[#fff] w-full max-w-[1366px] ">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-medium">Pasta Principal</div>
             <div className="flex flex-row gap-2 justify-center">
@@ -53,12 +53,12 @@ const Main = () => {
               {token ? <ActionButton /> : ""}
             </div>
           </div>
-          <div className="shadow-xl mt-4">
+          <div className="shadow-xl mt-4 grid grid-cols-3 gap-1">
             {folders.map((folder) => (
               <div key={folder._id}>
                 <a
                   href={folder._id}
-                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
+                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
                 >
                   <div className="flex">
                     <img src={folder.icon} className="h-6 w-6 mr-2" />
@@ -72,7 +72,7 @@ const Main = () => {
               <div key={file._id}>
                 <a
                   href={`/file/${file._id}`}
-                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4"
+                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
                 >
                   <div className="flex">
                     <img src={file.icon} className="h-6 w-6 mr-2" />
@@ -83,8 +83,6 @@ const Main = () => {
               </div>
             ))}
           </div>
-
-          <grid></grid>
         </div>
       </div>
     </ThemeProvider>

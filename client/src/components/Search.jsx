@@ -36,7 +36,7 @@ const Search = () => {
     return (
       <ThemeProvider theme={DefaultTheme}>
         <div className="w-screen flex items-center justify-center flex-col">
-          <div className="mt-6 bg-[#fff] w-full max-w-[1280px]">
+          <div className="mt-6 bg-[#fff] w-full max-w-[1366px]">
             <div className="flex items-center justify-between">
               <div className="text-2xl font-medium">Procura: {search}</div>
               <div className="flex flex-row gap-2 justify-center">

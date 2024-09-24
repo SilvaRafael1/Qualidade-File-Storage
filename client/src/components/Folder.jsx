@@ -21,7 +21,11 @@ const Folder = () => {
       const res = await client.get(`/folder/${id}`);
       if (res.data) {
         setTitle(res.data.name);
-        setPaiId(`/${res.data.pai}`);
+        if (res.data.pai == "66bb480a577f3ec36762ea14") {
+          setPaiId("/")
+        } else {
+          setPaiId(`/${res.data.pai}`);
+        }
         setFiles(res.data.files);
       } else {
         setFiles([]);
@@ -53,7 +57,7 @@ const Folder = () => {
     return (
       <ThemeProvider theme={DefaultTheme}>
         <div className="w-screen flex items-center justify-center flex-col">
-          <div className="mt-6 bg-[#fff] w-full max-w-[1280px]">
+          <div className="mt-6 bg-[#fff] w-full max-w-[1366px]">
             <div className="flex items-center justify-between">
               <div className="text-2xl font-medium">{title}</div>
               <div className="flex flex-row gap-2 justify-center">

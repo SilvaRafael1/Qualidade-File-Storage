@@ -54,7 +54,7 @@ function Dashboard() {
   return (
     <ThemeProvider theme={DefaultTheme}>
       <div className="w-full flex items-center justify-center">
-        <div className="my-3 bg-[#fff] w-full max-w-[1280px]">
+        <div className="my-3 bg-[#fff] w-full max-w-[1366px]">
           <Link to="/">
             <Button variant="outlined" startIcon={<Folder />}>
               Ir para as Pastas

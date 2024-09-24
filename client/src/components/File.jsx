@@ -15,6 +15,7 @@ import { Switch, Case, Default } from "react-if"
 const File = () => {
   const { id } = useParams()
   const [file, setFile] = useState([])
+  const [paiId, setPaiId] = useState("../");
   const [filePath, setFilePath] = useState("")
   const zoomPluginInstance = zoomPlugin()
   const { ZoomInButton, ZoomOutButton, ZoomPopover, zoomTo } = zoomPluginInstance
@@ -34,6 +35,11 @@ const File = () => {
       if (res.data) {
         setFile(res.data);
         setFilePath(replaceSpaces(res.data.path))
+        if (res.data.pai == "66bb480a577f3ec36762ea14") {
+          setPaiId("/")
+        } else {
+          setPaiId(`/${res.data.pai}`);
+        }
       } else {
         setFile([]);
       }
@@ -52,17 +58,14 @@ const File = () => {
     height: "680px"
   }
 
-  console.log(file.ext);
-  console.log(filePath);
-
   return (
     <ThemeProvider theme={DefaultTheme}>
       <div className="w-full flex items-center justify-center" style={{}}>
-        <div className="my-3 bg-[#fff] w-full max-w-[1280px]">
+        <div className="my-3 bg-[#fff] w-full max-w-[1366px]">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-medium">{file.name}</div>
             <div className="flex flex-row gap-2 justify-center">
-              <Button variant="contained" href={`../${file.pai}`}>
+              <Button variant="contained" href={paiId}>
                 Voltar
               </Button>
             </div>
