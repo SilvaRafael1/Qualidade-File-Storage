@@ -2,6 +2,7 @@ const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
 const IconURL = require("../service/IconsService");
 const path = require("path");
+const redisClient = require("../redis/client");
 require("dotenv/config")
 
 module.exports = {
@@ -49,11 +50,21 @@ module.exports = {
           await folder.save();
         }
 
+        if (newFile.pai == "66bb480a577f3ec36762ea14") {
+          await redisClient.del("mainFolderCache")
+        } else {
+          await redisClient.del(folderId)
+        }
+
         await newFile.save();
         savedFiles.push(newFile);
       }
 
-      res.redirect(`https://${URL}/${folderId}`)
+      if (folderId == "66bb480a577f3ec36762ea14") {
+        res.redirect(`https://${URL}/`)
+      } else {
+        res.redirect(`https://${URL}/${folderId}`)
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

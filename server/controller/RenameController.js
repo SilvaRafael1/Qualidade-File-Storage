@@ -1,6 +1,7 @@
 const fs = require("fs")
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
+const redisClient = require("../redis/client")
 require("dotenv/config")
 
 module.exports = {
@@ -29,6 +30,12 @@ module.exports = {
           path: newPath
         })
 
+        if (file.pai == "66bb480a577f3ec36762ea14") {
+          await redisClient.del(`mainFolderCache`)
+        } else {
+          await redisClient.del(`${file.pai}`)
+        }
+
         return res.json(updatedFile)
       }
 
@@ -36,6 +43,13 @@ module.exports = {
         const updatedFolder = await Folder.updateOne(folder, {
           name: newName
         })
+
+        await redisClient.del(`${folder._id}`)
+        if (folder.pai == "66bb480a577f3ec36762ea14") {
+          await redisClient.del(`mainFolderCache`)
+        } else {
+          await redisClient.del(`${folder.pai}`)
+        }
 
         return res.json(updatedFolder)
       }

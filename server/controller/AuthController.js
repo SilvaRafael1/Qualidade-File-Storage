@@ -27,7 +27,7 @@ module.exports = {
 
   async register(req, res) {
     try {
-      const { username, password } = req.body;
+      const { username, password, role } = req.body;
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -41,6 +41,10 @@ module.exports = {
         username,
         password: hashedPassword,
       });
+
+      if (role) {
+        user.role = role
+      }
 
       const savedUser = await user.save();
       res.json({

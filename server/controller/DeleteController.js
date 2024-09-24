@@ -1,6 +1,7 @@
 const fs = require("fs")
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
+const redisClient = require("../redis/client");
 
 module.exports = {
   async delete(req, res) {
@@ -31,6 +32,13 @@ module.exports = {
           console.error(err)
         }
       })
+      
+      if (file.pai == "66bb480a577f3ec36762ea14") {
+        await redisClient.del("mainFolderCache")
+      } else {
+        await redisClient.del(file.pai)
+      }
+
       return res.json("Arquivo deletado.")
     }
     
@@ -41,6 +49,26 @@ module.exports = {
           { $pull: { "parent": folder._id }}
         )
         await Folder.deleteOne(folder);
+
+        const haveFolderCache = async (id) => {
+          try {
+            const cache = await redisClient.get(`${id}`);
+            return cache;
+          } catch (error) {
+            console.error(error)
+          }
+        }
+        
+        if (haveFolderCache(folder._id)) {
+          await redisClient.del(`${folder._id}`)
+        }
+
+        if (folder.pai[0] == "66bb480a577f3ec36762ea14") {
+          await redisClient.del("mainFolderCache")
+        } else if (haveFolderCache(folder.pai[0])) {
+          await redisClient.del(`${folder.pai[0]}`)
+        }
+
         return res.json("Pasta deletada.")
       }
 
