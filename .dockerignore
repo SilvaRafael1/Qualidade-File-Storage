@@ -4,3 +4,5 @@
 
 # misc
 /server/.env
+/server/cert
+/server/uploads
