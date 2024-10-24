@@ -104,7 +104,7 @@ const ActionButton = () => {
             <DialogContentText>
               Selecione os arquivos que deseja adicionar na pasta.
             </DialogContentText>
-            <input type="file" name="files" id="files" multiple />
+            <input type="file" name="files" id="files" accept=".pdf,.docx,.xlsx" multiple />
             <input type="hidden" name="folderId" id="folderId" value={folderId} />
           </DialogContent>
           <DialogActions>
