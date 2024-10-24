@@ -3,17 +3,15 @@ const mongoose = require("mongoose");
 const path = require("path");
 const router = require("./routes");
 const cors = require("cors");
-const http = require("node:http")
-const https = require("node:https")
-const fs = require("node:fs")
 const InsertDataService = require("./service/InsertDataService");
+require("dotenv/config")
 
 const app = express();
 
 // Connect to Local MongoDB
-const uri = "mongodb://mongo:27017";
+const uri = process.env.MONGO_URL;
 mongoose.connect(uri, {
-  dbName: "filestorage",
+  dbName: "filestorage"
 });
 const db = mongoose.connection;
 mongoose.connection.on("error", function (err) {
@@ -29,12 +27,6 @@ app.use(cors());
 // JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// SSL
-const certs = {
-  key: fs.readFileSync("./cert/wildcard.tacchini.com.br2024.key"),
-  cert: fs.readFileSync("./cert/wildcard.tacchini.com.br.crt"),
-}
 
 // Router
 app.use("/api", router);
@@ -71,11 +63,9 @@ app.use((req, res, next) => {
   }
 });
 
-// Start the server
-http.createServer((req, res) => {
-  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-  res.end();
-}).listen(80);
-https.createServer(certs, app).listen(443, () => {
+app.listen(80, () => {
+  console.log(`Servidor HTTP rodando na porta 80`)
+})
+app.listen(443, () => {
   console.log(`Servidor HTTPS rodando na porta 443`)
 })
