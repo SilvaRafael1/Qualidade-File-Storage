@@ -34,6 +34,7 @@ app.use("/api", router);
 // Auto Insert
 InsertDataService.InsertAdminUser("admin", "Tac428220ss", "admin")
 InsertDataService.InsertMainFolder()
+InsertDataService.UpdateFileStatus()
 
 // Public Files
 app.use("/files", express.static(path.join(__dirname, "uploads")));

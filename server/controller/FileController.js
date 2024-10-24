@@ -6,6 +6,19 @@ const redisClient = require("../redis/client");
 require("dotenv/config")
 
 module.exports = {
+  async index(req, res) {
+    try {
+      const files = await File.find(
+        { status: false }
+      ).populate({
+        path: "pai"
+      });
+      res.status(200).json(files)
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
   async byId(req, res) {
     try {
       const { id } = req.params;
@@ -61,9 +74,9 @@ module.exports = {
       }
 
       if (folderId == "66bb480a577f3ec36762ea14") {
-        res.redirect(`https://${URL}/`)
+        res.redirect(`http://${URL}/`)
       } else {
-        res.redirect(`https://${URL}/${folderId}`)
+        res.redirect(`http://${URL}/${folderId}`)
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -79,6 +92,25 @@ module.exports = {
         })
       }
       res.json("feito xd")
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  async restore(req, res) {
+    try {
+      const { id } = req.params;
+      const file = await File.findByIdAndUpdate(id, {
+        status: true
+      })
+
+      if (file.pai == "66bb480a577f3ec36762ea14") {
+        await redisClient.del("mainFolderCache")
+        return res.json("Arquivo restaurado.")
+      } 
+
+      await redisClient.del(`${file.pai}`)
+      return res.json("Arquivo restaurado.")
     } catch (error) {
       console.error(error)
     }

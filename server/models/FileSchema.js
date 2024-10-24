@@ -5,6 +5,10 @@ const fileSchema = new mongoose.Schema({
   icon: String,
   path: String,
   ext: String,
+  status: {
+    type: Boolean,
+    default: true,
+  },
   pai: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Folder",

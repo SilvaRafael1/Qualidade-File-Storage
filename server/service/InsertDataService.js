@@ -43,9 +43,21 @@ async function InsertMainFolder() {
   }
 }
 
+async function UpdateFileStatus() {
+    try {
+      await File.updateMany(
+        { status: { $exists: false } },
+        { $set: { status: true }}
+      ).then((result) => {
+        console.log(`Documentos atualizados: ${result.nModified}`);
+      })
+    } catch (error) {
+      console.error(error)
+    }
 }
 
 module.exports = {
   InsertAdminUser,
   InsertMainFolder,
+  UpdateFileStatus
 };

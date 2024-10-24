@@ -25,9 +25,11 @@ const RenameController = require("./controller/RenameController")
 const SearchController = require("./controller/SearchController")
 const AuthController = require("./controller/AuthController")
 
+router.get("/file", FileController.index)
 router.get("/file/:id", FileController.byId);
 router.post("/upload", upload, FileController.upload);
 router.get("/updateIcons", FileController.updateIcons);
+router.get("/file/restore/:id", FileController.restore);
 
 router.delete("/delete/:id", DeleteController.delete);
 
