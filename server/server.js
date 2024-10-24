@@ -6,6 +6,7 @@ const cors = require("cors");
 const http = require("node:http")
 const https = require("node:https")
 const fs = require("node:fs")
+const InsertDataService = require("./service/InsertDataService");
 
 const app = express();
 
@@ -38,6 +39,10 @@ const certs = {
 // Router
 app.use("/api", router);
 
+// Auto Insert
+InsertDataService.InsertAdminUser("admin", "Tac428220ss", "admin")
+InsertDataService.InsertMainFolder()
+
 // Public Files
 app.use("/files", express.static(path.join(__dirname, "uploads")));
 app.use("/icons", express.static(path.join(__dirname, "icons")));
@@ -54,6 +59,17 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Middleware para redirecionar HTTP para HTTPS
+app.use((req, res, next) => {
+  if (req.secure) {
+    // Se a requisição já for HTTPS, prossiga normalmente
+    next();
+  } else {
+    // Redireciona para HTTPS
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+});
 
 // Start the server
 http.createServer((req, res) => {
