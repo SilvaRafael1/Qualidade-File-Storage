@@ -11,9 +11,11 @@ const NavBar = () => {
       <AppBar color="primary" position="static">
         <Toolbar>
           <div className="h-full w-full flex flex-row items-center content-center justify-between">
-            <Typography variant="h4" color="inherit">
-              Documentos Institucionais
-            </Typography>
+            <Link to="/">
+              <Typography variant="h4" color="inherit">
+                Documentos Institucionais
+              </Typography>
+            </Link>
             {token ? (
               <div>
                 <Link to="/dashboard">
