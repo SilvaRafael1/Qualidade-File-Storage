@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import ActionButton from "./ActionButton";
 import ActionTooltip from "./ActionTooltip";
 import SearchInput from "./SearchInput";
+import { If, Then, Else } from "react-if";
 
 const Main = () => {
   const [files, setFiles] = useState([]);
@@ -69,18 +70,26 @@ const Main = () => {
               </div>
             ))}
             {files.map((file) => (
-              <div key={file._id}>
-                <a
-                  href={`/file/${file._id}`}
-                  className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
-                >
-                  <div className="flex">
-                    <img src={file.icon} className="h-6 w-6 mr-2" />
-                    {file.name}
+              <If condition={file.status} key={file._id}>
+                <Then>
+                  <div >
+                    <a
+                      href={`/file/${file._id}`}
+                      className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
+                    >
+                      <div className="flex">
+                        <img src={file.icon} className="h-6 w-6 mr-2" />
+                        {file.name}
+                      </div>
+                      {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
+                    </a>
                   </div>
-                  {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
-                </a>
-              </div>
+                </Then>
+                <Else>
+                  <></>
+                </Else>
+              </If>
+
             ))}
           </div>
         </div>

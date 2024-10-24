@@ -19,26 +19,29 @@ module.exports = {
     }
 
     if (file) {
-      const path = new URL(file.path)
-      const folder = path.pathname.replace("/files/", "/uploads/")
-      const filePath = replaceSpaces(folder)
-      await File.deleteOne(file);
-      await Folder.updateOne(
-        { "_id": file.pai },
-        { $pull: { "files": file._id }}
-      )
-      fs.unlink(`../server/${filePath}`, (err) => {
-        if (err) {
-          console.error(err)
-        }
+      // const path = new URL(file.path)
+      // const folder = path.pathname.replace("/files/", "/uploads/")
+      // const filePath = replaceSpaces(folder)
+      // await File.deleteOne(file);
+      // await Folder.updateOne(
+      //   { "_id": file.pai },
+      //   { $pull: { "files": file._id }}
+      // )
+      // fs.unlink(`../server/${filePath}`, (err) => {
+      //   if (err) {
+      //     console.error(err)
+      //   }
+      // })
+      await file.updateOne({
+        status: false
       })
       
       if (file.pai == "66bb480a577f3ec36762ea14") {
         await redisClient.del("mainFolderCache")
-      } else {
-        await redisClient.del(file.pai)
-      }
+        return res.json("Arquivo deletado.")
+      } 
 
+      await redisClient.del(`${file.pai}`)
       return res.json("Arquivo deletado.")
     }
     

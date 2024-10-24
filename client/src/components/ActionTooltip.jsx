@@ -52,6 +52,20 @@ const ActionTooltip = ({id, name}) => {
       <Dialog
         open={openDialogDelete}
         onClose={handleDeleteClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event) => {
+            event.preventDefault();
+            client.delete(`/delete/${id}`).then((response) => {
+              if (response.data == "Pasta deletada." || response.data == "Arquivo deletado.") {
+                handleDeleteClose();
+                location.reload();
+              } else {
+                setError(response.data)
+              }
+            })
+          }
+        }}
       >
         <DialogTitle>Deletar Arquivo</DialogTitle>
         <DialogContent>
@@ -64,20 +78,7 @@ const ActionTooltip = ({id, name}) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteClose}>Cancelar</Button>
-          <Button type="submit" variant="contained" color='red' onClick={() => {
-            client.delete(`/delete/${id}`).then((response) => {
-              if (response.data == "Pasta deletada." || response.data == "Arquivo deletado.") {
-                handleDeleteClose();
-                location.reload();
-              } else {
-                setError(response.data)
-              }
-            });
-          }}>
-            <span className='text-white'>
-              Deletar
-            </span>
-          </Button>
+          <Button type='submit' variant="contained">Deletar</Button>
         </DialogActions>
       </Dialog>
       
