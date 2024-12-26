@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Delete, Edit } from "@mui/icons-material"
 import { 
   Tooltip, 
@@ -9,14 +9,26 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField
+  TextField,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  FormLabel
 } from "@mui/material";
 import client from "../api/Api";
 
-const ActionTooltip = ({id, name}) => {
+const ActionTooltip = ({id, name, download}) => {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openDialogRename, setOpenDialogRename] = useState(false);
+  const [radio, setRadio] = useState("");
   const [error, setError] = useState("");
+  
+  useEffect(() => {
+    if (download != "folder") {
+      setRadio(download)
+    }
+  }, [download])
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -34,6 +46,10 @@ const ActionTooltip = ({id, name}) => {
   const handleRenameClose = () => {
     setOpenDialogRename(false)
   }
+
+  const handleChangeRadio = (event) => {
+    setRadio(event.target.value);
+  };
 
   return (
     <div>
@@ -94,6 +110,7 @@ const ActionTooltip = ({id, name}) => {
             const formJson = Object.fromEntries(formData.entries());
             formJson.id = id
             formJson.oldName = name
+            formJson.download = radio
             client.put("/rename", formJson).then(() => {
               handleRenameClose();
               location.reload();
@@ -111,7 +128,7 @@ const ActionTooltip = ({id, name}) => {
           </DialogContentText>
           <TextField 
             autoFocus
-            required
+            // required
             margin='dense'
             id='newName'
             name='newName'
@@ -119,7 +136,19 @@ const ActionTooltip = ({id, name}) => {
             type='text'
             fullWidth
             variant='standard'
+            // value={name}
           />
+          {download != "folder" ? (
+            <div className='mt-4'>
+              <FormControl>
+                <FormLabel>Permitido Download?</FormLabel>
+                <RadioGroup defaultValue={download} onChange={handleChangeRadio} row>
+                  <FormControlLabel value="false" control={<Radio />} label="Não" />
+                  <FormControlLabel value="true" control={<Radio />} label="Sim" />
+                </RadioGroup>
+              </FormControl>
+            </div>
+          ) : ("")}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleRenameClose}>Cancelar</Button>

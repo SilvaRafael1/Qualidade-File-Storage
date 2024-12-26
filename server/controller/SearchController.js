@@ -15,7 +15,8 @@ module.exports = {
         "name": {
           '$regex': search,
           '$options': 'i'
-        }
+        },
+        status: true
       })
       
       res.json({ folders, files })

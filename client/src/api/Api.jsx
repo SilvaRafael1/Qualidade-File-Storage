@@ -2,7 +2,7 @@ import axios from "axios"
 
 const client = axios.create({
     // baseURL: `http://localhost/api`
-    // baseURL: `https://100.0.1.50/api`
+    baseURL: `https://documentos.tacchini.com.br/api`
 });
 
 export default client;

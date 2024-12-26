@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage,
   limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB
+    fileSize: 100 * 1024 * 1024, // 100MB
   }
 }).array('files');
 
@@ -30,6 +30,7 @@ router.get("/file/:id", FileController.byId);
 router.post("/upload", upload, FileController.upload);
 router.get("/updateIcons", FileController.updateIcons);
 router.get("/file/restore/:id", FileController.restore);
+router.get("/file/download/:id", FileController.download);
 
 router.delete("/delete/:id", DeleteController.delete);
 

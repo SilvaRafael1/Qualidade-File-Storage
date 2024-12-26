@@ -9,6 +9,10 @@ const fileSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  download: {
+    type: Boolean,
+    default: false,
+  },
   pai: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Folder",

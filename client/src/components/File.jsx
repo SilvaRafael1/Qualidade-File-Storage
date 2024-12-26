@@ -3,6 +3,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { Button, Breadcrumbs, Link, Typography } from "@mui/material"
 import { Worker, Viewer as ViewerPDF, SpecialZoomLevel } from "@react-pdf-viewer/core"
 import { zoomPlugin } from "@react-pdf-viewer/zoom"
+import { getFilePlugin } from '@react-pdf-viewer/get-file';
 import "@react-pdf-viewer/core/lib/styles/index.css"
 import { useParams } from "react-router-dom";
 import client from "../api/Api";
@@ -77,6 +78,14 @@ const File = () => {
     height: "680px"
   }
 
+  const getFilePluginInstance = getFilePlugin({
+    fileNameGenerator: () => {
+      const fileName = file.name
+      return fileName
+    }
+  })
+  const { Download } = getFilePluginInstance
+
   return (
     <ThemeProvider theme={DefaultTheme}>
       <div className="w-full flex items-center justify-center" style={{}}>
@@ -108,13 +117,16 @@ const File = () => {
                   <ZoomOutButton />
                   <ZoomPopover />
                   <ZoomInButton />
+                  {file.download == true ? (
+                    <Download />
+                  ) : ("")}
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                    <div className="h-[750px] border-solid border-[1px] border-pdf-rgba p-2">
+                    <div className="h-[730px] border-solid border-[1px] border-pdf-rgba p-2">
                       {file.path ? (
                         <ViewerPDF
-                          plugins={[zoomPluginInstance]}
+                          plugins={[zoomPluginInstance, getFilePluginInstance]}
                           fileUrl={file.path}
                           defaultScale={() => zoomTo(SpecialZoomLevel.PageFit)}
                         />

@@ -95,8 +95,9 @@ const ActionButton = () => {
       <Dialog open={openDialogFiles} onClose={handleDialogFilesClose}>
         <form
           method="post"
-          action="https://localhost/api/upload"
+          // action="http://localhost/api/upload"
           // action="https://100.0.1.50/api/upload"
+          action="https://documentos.tacchini.com.br/api/upload"
           encType="multipart/form-data"
         >
           <DialogTitle>Arquivo</DialogTitle>
@@ -104,7 +105,16 @@ const ActionButton = () => {
             <DialogContentText>
               Selecione os arquivos que deseja adicionar na pasta.
             </DialogContentText>
-            <input type="file" name="files" id="files" accept=".pdf,.docx,.xlsx" multiple />
+            <input type="file" name="files" id="files" accept=".pdf, .doc, .docx,.xlsx, .pptx, .ppt" multiple />
+            <DialogContentText className="py-2">
+              Permitido download de PDF?
+            </DialogContentText>
+            <div className="flex items-center">
+              <input type="radio" name="download" id="nao" value="false" checked className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
+              <label htmlFor="nao" className="mr-3 ml-1">Não</label>
+              <input type="radio" name="download" id="sim" value="true" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
+              <label htmlFor="sim" className="mr-3 ml-1">Sim</label>
+            </div>
             <input type="hidden" name="folderId" id="folderId" value={folderId} />
           </DialogContent>
           <DialogActions>

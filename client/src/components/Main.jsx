@@ -65,31 +65,49 @@ const Main = () => {
                     <img src={folder.icon} className="h-6 w-6 mr-2" />
                     {folder.name}
                   </div>
-                  {token ? <ActionTooltip id={folder._id} name={folder.name} /> : ""}
+                  {token ? <ActionTooltip id={folder._id} name={folder.name} download={"folder"} /> : ""}
                 </a>
               </div>
             ))}
             {files.map((file) => (
               <If condition={file.status} key={file._id}>
                 <Then>
-                  <div >
-                    <a
-                      href={`/file/${file._id}`}
-                      className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
-                    >
-                      <div className="flex">
-                        <img src={file.icon} className="h-6 w-6 mr-2" />
-                        {file.name}
-                      </div>
-                      {token ? <ActionTooltip id={file._id} name={file.name} /> : ""}
-                    </a>
-                  </div>
+                  <If condition={file.ext == "pptx" || file.ext == "ppt"}>
+                    <Then>
+                      <div >
+                        <a
+                          // href={`http://localhost/api/file/download/${file._id}`}
+                          href={`https://documentos.tacchini.com.br/api/file/download/${file._id}`}
+                          className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
+                        >
+                          <div className="flex">
+                            <img src={file.icon} className="h-6 w-6 mr-2" />
+                            {file.name}
+                          </div>
+                          {token ? <ActionTooltip id={file._id} name={file.name} download={file.download} /> : ""}
+                        </a>
+                    </div>
+                    </Then>
+                    <Else>
+                      <div >
+                        <a
+                          href={`/file/${file._id}`}
+                          className="flex justify-between items-center border border-solid hover:bg-[#eee] p-4 h-full"
+                        >
+                          <div className="flex">
+                            <img src={file.icon} className="h-6 w-6 mr-2" />
+                            {file.name}
+                          </div>
+                          {token ? <ActionTooltip id={file._id} name={file.name} download={file.download} /> : ""}
+                        </a>
+                    </div>
+                    </Else>
+                  </If>
                 </Then>
                 <Else>
                   <></>
                 </Else>
               </If>
-
             ))}
           </div>
         </div>

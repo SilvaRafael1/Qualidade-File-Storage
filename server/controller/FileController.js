@@ -3,6 +3,7 @@ const Folder = require("../models/FolderSchema");
 const IconURL = require("../service/IconsService");
 const path = require("path");
 const redisClient = require("../redis/client");
+const fs = require('node:fs/promises')
 require("dotenv/config")
 
 module.exports = {
@@ -22,7 +23,14 @@ module.exports = {
   async byId(req, res) {
     try {
       const { id } = req.params;
-      const file = await File.findById(id);
+      const file = await File.findById(id).populate({
+        path: "pai",
+        options: {
+          sort: {
+            name: 1
+          }
+        }
+      });
       res.status(200).json(file);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -33,7 +41,12 @@ module.exports = {
     const URL = process.env.APP_URL;
 
     try {
-      const { folderId } = req.body;
+      const { folderId, download } = req.body;
+
+      let trueDownload = false
+      if (download == "true") {
+        trueDownload = true
+      }
 
       const pastaPrincipal = await Folder.findOne({
         name: "Pasta Principal"
@@ -46,14 +59,28 @@ module.exports = {
       const savedFiles = [];
 
       for (const file of req.files) {
-        const originalFilename = Buffer.from(file.originalname, "latin1").toString("utf-8");
-        const extFile = path.extname(file.filename).split(".")
+        let originalFilename = Buffer.from(file.originalname, "latin1").toString("utf-8");
+        let extFile = path.extname(file.filename).split(".")
+        
+        if (extFile[extFile.length - 1] == 'doc') {
+          extFile[extFile.length - 1] = 'docx'
+          originalFilename = originalFilename.replace('doc', 'docx')
+          newFileName = file.filename.replace('doc', 'docx')
+          fs.rename(`../server/uploads/${file.filename}`, `../server/uploads/${newFileName}`, (err) => {
+            console.log(err);
+          })
+          file.filename = file.filename.replace('doc', 'docx')
+        }
+
+        let pathOriginal = `https://${URL}/files/${file.filename}`
+
         const newFile = new File({
           name: originalFilename,
           icon: IconURL(file.originalname),
-          path: `https://${URL}/files/${file.filename}`,
+          path: pathOriginal,
           ext: extFile[extFile.length - 1],
-          pai: pastaPrincipal._id
+          pai: pastaPrincipal._id,
+          download: trueDownload
         });
 
         if (folderId) {
@@ -113,6 +140,40 @@ module.exports = {
       return res.json("Arquivo restaurado.")
     } catch (error) {
       console.error(error)
+    }
+  },
+
+  async download(req, res) {
+    const URL = process.env.APP_URL;
+
+    try {
+      const { id } = req.params;
+      const file = await File.findById(id).populate({
+        path: "pai",
+        options: {
+          sort: {
+            name: 1
+          }
+        }
+      });
+
+      let filePath = file.path
+      filePath = filePath.replace(`https://${URL}/files/`, "")
+
+      res.download(`./uploads/${filePath}`, file.name, (err) => {
+        if (err) {
+          console.error("Erro ao enviar o arquivo:", err);
+          res.status(500).send("Erro ao baixar o arquivo.");
+        } 
+      })
+
+      // if (file.pai == "66bb480a577f3ec36762ea14") {
+      //   res.redirect(`http://${URL}/`)
+      // } else {
+      //   res.redirect(`http://${URL}/${file.pai}`)
+      // }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   }
 };

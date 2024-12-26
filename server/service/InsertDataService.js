@@ -51,6 +51,12 @@ async function UpdateFileStatus() {
       ).then((result) => {
         console.log(`Documentos atualizados: ${result.nModified}`);
       })
+      await File.updateMany(
+        { download: { $exists: false } },
+        { $set: { download: false }}
+      ).then((result) => {
+        console.log(`Documentos atualizados: ${result.nModified}`);
+      })
     } catch (error) {
       console.error(error)
     }
