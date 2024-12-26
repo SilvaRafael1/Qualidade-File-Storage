@@ -40,6 +40,7 @@ router.get("/search/:search", SearchController.search);
 router.get("/folder", FolderController.index);
 router.get("/folder/:id", FolderController.filesFolder);
 router.post("/folder", FolderController.create);
+router.get("/folder/breadcrumbs/:id", FolderController.breadcrumbs)
 
 router.post("/auth/login", AuthController.auth)
 router.post("/auth/register", AuthController.register)

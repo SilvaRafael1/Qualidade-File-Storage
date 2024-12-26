@@ -2,6 +2,7 @@ const fs = require("fs")
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
 const redisClient = require("../redis/client")
+const deleteKeysByPattern = require("../service/CacheBreadcrums");
 require("dotenv/config")
 
 module.exports = {
@@ -43,6 +44,8 @@ module.exports = {
         const updatedFolder = await Folder.updateOne(folder, {
           name: newName
         })
+
+        deleteKeysByPattern("*-breadcrumb")
 
         await redisClient.del(`${folder._id}`)
         if (folder.pai == "66bb480a577f3ec36762ea14") {

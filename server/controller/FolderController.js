@@ -103,4 +103,56 @@ module.exports = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  async breadcrumbs(req, res) {
+    try {
+      let folderid = req.params.id
+
+      const isCached = await redisClient.get(`${folderid}-breadcrumb`)
+      if (isCached) {
+        return res.status(200).json(JSON.parse(isCached));
+      }
+
+      const list = []
+
+      let ativo = true
+      do {
+        let searchFolder = await Folder.findById(folderid).populate({
+          path: "pai",
+          options: {
+            sort: {
+              name: 1
+            }
+          }
+        });
+        if (searchFolder) {
+          if (searchFolder.pai[0]) {
+            if (searchFolder.pai[0]._id == "66bb480a577f3ec36762ea14") {
+              let newObj = {
+                id: "",
+                name: searchFolder.pai[0].name
+              }
+              list.unshift(newObj)
+              ativo = false
+              continue
+            }
+            let newObj = {
+              id: searchFolder.pai[0]._id,
+              name: searchFolder.pai[0].name
+            }
+            list.unshift(newObj)
+            folderid = searchFolder.pai[0]._id
+          } else {
+            ativo = false
+          }
+        } else {
+          ativo = false
+        }
+      } while (ativo)
+      await redisClient.set(`${req.params.id}-breadcrumb`, JSON.stringify(list))
+      return res.json(list)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 };

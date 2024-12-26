@@ -1,6 +1,6 @@
 import DefaultTheme from "../theme/DefaultTheme";
 import { ThemeProvider } from "@mui/material/styles";
-import { Button } from "@mui/material"
+import { Button, Breadcrumbs, Link, Typography } from "@mui/material"
 import { Worker, Viewer as ViewerPDF, SpecialZoomLevel } from "@react-pdf-viewer/core"
 import { zoomPlugin } from "@react-pdf-viewer/zoom"
 import "@react-pdf-viewer/core/lib/styles/index.css"
@@ -15,8 +15,10 @@ import { Switch, Case, Default } from "react-if"
 const File = () => {
   const { id } = useParams()
   const [file, setFile] = useState([])
-  const [paiId, setPaiId] = useState("../");
+  const [bread, setBread] = useState([]);
+  const [paiId, setPaiId] = useState("");
   const [filePath, setFilePath] = useState("")
+
   const zoomPluginInstance = zoomPlugin()
   const { ZoomInButton, ZoomOutButton, ZoomPopover, zoomTo } = zoomPluginInstance
 
@@ -35,10 +37,10 @@ const File = () => {
       if (res.data) {
         setFile(res.data);
         setFilePath(replaceSpaces(res.data.path))
-        if (res.data.pai == "66bb480a577f3ec36762ea14") {
-          setPaiId("/")
+        if (res.data.pai._id == "66bb480a577f3ec36762ea14") {
+          setPaiId()
         } else {
-          setPaiId(`/${res.data.pai}`);
+          setPaiId(res.data.pai._id);
         }
       } else {
         setFile([]);
@@ -48,9 +50,26 @@ const File = () => {
     }
   };
 
+  const listBreadcrumbs = async () => {
+    try {
+      const res = await client.get(`/folder/breadcrumbs/${paiId}`);
+      if (res.data) {
+        setBread(res.data);
+      } else {
+        setBread([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     listFile();
   }, []);
+
+  useEffect(() => {
+    listBreadcrumbs();
+  }, [paiId]);
 
   let params = {
     fileName: file.name,
@@ -65,14 +84,26 @@ const File = () => {
           <div className="flex items-center justify-between">
             <div className="text-2xl font-medium">{file.name}</div>
             <div className="flex flex-row gap-2 justify-center">
-              <Button variant="contained" href={paiId}>
+              <Button variant="contained" href={`/${paiId}`}>
                 Voltar
               </Button>
             </div>
           </div>
+          <div>
+            <Breadcrumbs maxItems={5}>
+              {bread.map((bread) => (
+                <Link underline="hover" color="inherit" href={`../${bread.id}`} key={bread.id}>
+                  {bread.name}
+                </Link>
+              ))}
+              <Link underline="hover" color="inherit" href={`../${file.pai?._id}`} key={file.pai?.id}>
+                <Typography color="primary">{file.pai?.name || ""}</Typography>
+              </Link>
+            </Breadcrumbs>
+          </div>
           <Switch>
             <Case condition={file.ext === "pdf"}>
-              <div className="mt-3 border-solid border-[1px] border-pdf03-rgba flex flex-col h-full">
+              <div className="mt-1 border-solid border-[1px] border-pdf03-rgba flex flex-col h-full">
                 <div className="items-center bg-[#eeeeee] border-b-pdf01-rgba flex justify-center p-[4px]">
                   <ZoomOutButton />
                   <ZoomPopover />

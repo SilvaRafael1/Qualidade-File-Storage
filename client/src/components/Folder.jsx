@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import client from "../api/Api";
 import DefaultTheme from "../theme/DefaultTheme";
-import { ThemeProvider, Button } from "@mui/material";
+import { 
+  ThemeProvider, 
+  Button, 
+  Breadcrumbs, 
+  Link,
+  Typography
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import ActionTooltip from "./ActionTooltip";
@@ -11,6 +17,7 @@ import { If, Then, Else } from "react-if";
 const Folder = () => {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
+  const [bread, setBread] = useState([]);
   const [paiId, setPaiId] = useState("/");
   const [title, setTitle] = useState("");
   const token = localStorage.getItem("token")
@@ -49,9 +56,23 @@ const Folder = () => {
     }
   };
 
+  const listBreadcrumbs = async () => {
+    try {
+      const res = await client.get(`/folder/breadcrumbs/${id}`);
+      if (res.data) {
+        setBread(res.data);
+      } else {
+        setBread([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     listFiles();
     listFolders();
+    listBreadcrumbs();
   }, []);
 
   if (folders.length == 0 && files.length == 0) {
@@ -69,7 +90,19 @@ const Folder = () => {
                 </Button>
               </div>
             </div>
-            <div className="shadow-xl border border-solid p-5 mt-4">
+            <div>
+              <Breadcrumbs maxItems={5}>
+                {bread.map((bread) => (
+                  <Link underline="hover" color="inherit" href={`../${bread.id}`} key={bread.id}>
+                    {bread.name}
+                  </Link>
+                ))}
+                <Link underline="hover" color="inherit" href={id} key={id}>
+                  <Typography color="primary">{title}</Typography>
+                </Link>
+              </Breadcrumbs>
+            </div>
+            <div className="shadow-xl border border-solid p-5 mt-2">
               Pasta está vazia
             </div>
           </div>
@@ -92,7 +125,17 @@ const Folder = () => {
               </Button>
             </div>
           </div>
-          <div className="shadow-xl mt-4">
+          <div>
+            <Breadcrumbs maxItems={5}>
+              {bread.map((bread) => (
+                <Link underline="hover" color="inherit" href={`../${bread.id}`} key={bread.id}>
+                  {bread.name}
+                </Link>
+              ))}
+              <Typography color="primary">{title}</Typography>
+            </Breadcrumbs>
+          </div>
+          <div className="shadow-xl mt-2">
             {folders.map((folder) => (
               <div key={folder._id}>
                 <a

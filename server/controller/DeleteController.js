@@ -64,6 +64,7 @@ module.exports = {
         
         if (haveFolderCache(folder._id)) {
           await redisClient.del(`${folder._id}`)
+          await redisClient.del(`${folder._id}-breadcrum`)
         }
 
         if (folder.pai[0] == "66bb480a577f3ec36762ea14") {
