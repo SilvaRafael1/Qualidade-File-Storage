@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require("fs").promises;
 const File = require("../models/FileSchema");
 const Folder = require("../models/FolderSchema");
 const redisClient = require("../redis/client")
@@ -21,7 +21,7 @@ module.exports = {
           newName2 = oldName.replace(`.${extension}`, "")
         }
 
-        const newNameExt = `${newName2}.${extension}`
+        const newNameExt = `${newName}.${extension}`
         const fullOldName = file.path.replace(`https://${URL}/files/`, "")
         const newPath = file.path.replace(oldName, newNameExt)
         const fullNewName = newPath.replace(`https://${URL}/files/`, "")
@@ -49,7 +49,7 @@ module.exports = {
 
       if (folder) {
         const updatedFolder = await Folder.updateOne(folder, {
-          name: newNameBody
+          name: newName
         })
 
         deleteKeysByPattern("*-breadcrumb")
