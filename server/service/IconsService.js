@@ -24,6 +24,17 @@ function IconURL(filename) {
             IconURL += "/text.png";
             break;
         
+        case ".mp4":
+        case ".mov":
+        case ".avi":
+        case ".mpg":
+        case ".mpeg":
+        case ".wmv":
+        case ".ogg":
+        case ".webm":
+            IconURL += "/video.png";
+            break;
+        
         case ".csv":
         case ".xlsx":
         case ".xls":

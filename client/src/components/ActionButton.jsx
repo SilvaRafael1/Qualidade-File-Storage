@@ -105,7 +105,7 @@ const ActionButton = () => {
             <DialogContentText>
               Selecione os arquivos que deseja adicionar na pasta.
             </DialogContentText>
-            <input type="file" name="files" id="files" accept=".pdf, .doc, .docx,.xlsx, .pptx, .ppt" multiple />
+            <input type="file" name="files" id="files" accept=".pdf, .docx,.xlsx, .pptx, .ppt, .mp4, .jpeg, .png, .jpg, .mov, .avi, .mpg, .mpeg, .wmv, .ogg, .webm" multiple />
             <DialogContentText className="py-2">
               Permitido download de PDF?
             </DialogContentText>

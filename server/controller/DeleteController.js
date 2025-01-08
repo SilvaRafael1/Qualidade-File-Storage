@@ -33,7 +33,8 @@ module.exports = {
       //   }
       // })
       await file.updateOne({
-        status: false
+        status: false,
+        pai: '66bb480a577f3ec36762ea14'
       })
       
       if (file.pai == "66bb480a577f3ec36762ea14") {
@@ -46,7 +47,7 @@ module.exports = {
     }
     
     if (folder) {
-      if (folder.files.length == 0) {
+      // if (folder.files.length == 0) {
         await Folder.updateOne(
           { "_id": folder.pai[0] },
           { $pull: { "parent": folder._id }}
@@ -74,9 +75,9 @@ module.exports = {
         }
 
         return res.json("Pasta deletada.")
-      }
+      // }
 
-      return res.json("Não foi possivel excluir! Há arquivos presentes na pasta.");
+      // return res.json("Não foi possivel excluir! Há arquivos presentes na pasta.");
     }
   }
 }
